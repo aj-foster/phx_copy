@@ -1,4 +1,4 @@
-defmodule Phoenix.Assets.Watcher do
+defmodule Phoenix.Copy.Watcher do
   use GenServer
 
   def start_link(args) do
