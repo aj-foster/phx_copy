@@ -13,8 +13,7 @@ defmodule Phoenix.Copy.MixProject do
 
   def application do
     [
-      extra_applications: [:logger],
-      mod: {Phoenix.Copy.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
