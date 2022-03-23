@@ -70,11 +70,14 @@ defmodule Phoenix.Copy do
 
   @doc """
   Watch for changes in the configured `source` and copy files to the `destination`.
+
+  Also performs an initial copy of the files immediately.
   """
   @spec watch(atom) :: term
   def watch(profile \\ :default)
 
   def watch(profile) when is_atom(profile) do
+    run(profile)
     config = config_for!(profile)
 
     source = Keyword.fetch!(config, :source)
