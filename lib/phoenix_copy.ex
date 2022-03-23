@@ -1,20 +1,71 @@
 defmodule Phoenix.Copy do
-  @doc """
-  Returns the configuration for the given profile.
-  Returns nil if the profile does not exist.
+  @moduledoc """
+  Copies files within a Phoenix project.
+
+  This project was created to manage static asset files. Paired with other standalone build tools
+  like `esbuild` and `tailwind`, this can reduce your dependence on JavaScript-based build tools
+  like Webpack.
+
+  ## Configuration
+
+  Before using the project, you must configure one or more profiles. Each profile defines a source
+  and destination for the copy. In `config/config.exs`, add:
+
+      config :phoenix_copy,
+        default: [
+          source: Path.expand("source/", __DIR__),
+          destination: Path.expand("destination/", __DIR__)
+        ]
+
+  This defines a profile `:default`. You can define as many profiles as you wish. By using
+  `Path.expand/2`, you may define the source and destination as paths relative to the configuration
+  file.
+
+  ## Direct Usage
+
+  To copy files once, use `run/1` with the name of the configured profile:
+
+      run(:default)
+
+  To watch for changes and continually copy files, use `watch/1`:
+
+      watch(:default)
+
+  Note that `watch/1` will block execution.
   """
+
+  @doc """
+  Returns the configuration of the given `profile`.
+  """
+  @spec config_for!(atom) :: Keyword.t()
   def config_for!(profile) when is_atom(profile) do
     Application.get_env(:phoenix_copy, profile) ||
       raise ArgumentError, """
-      unknown esbuild profile. Make sure the profile is defined in your config/config.exs file, such as:
+      unknown copy profile. Make sure the profile is defined in your config/config.exs file, such as:
 
-          config :esbuild,
+          config :phoenix_copy,
             #{profile}: [
-              args: ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets),
-              cd: Path.expand("../assets", __DIR__),
-              env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+              source: Path.expand("../assets/static", __DIR__),
+              destination: Path.expand("../priv/static", __DIR__)
             ]
       """
+  end
+
+  @doc """
+  Copies files from the configured source and destination for the given `profile`.
+
+  Returns a list of copied files.
+  """
+  @spec run(atom) :: [binary]
+  def run(profile \\ :default)
+
+  def run(profile) when is_atom(profile) do
+    config = config_for!(profile)
+
+    source = Keyword.fetch!(config, :source)
+    destination = Keyword.fetch!(config, :destination)
+
+    File.cp_r!(source, destination)
   end
 
   @doc """
