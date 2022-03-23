@@ -16,4 +16,20 @@ defmodule Phoenix.Copy do
             ]
       """
   end
+
+  @doc """
+  Watch for changes in the configured `source` and copy files to the `destination`.
+  """
+  @spec watch(atom) :: term
+  def watch(profile \\ :default)
+
+  def watch(profile) when is_atom(profile) do
+    config = config_for!(profile)
+
+    source = Keyword.fetch!(config, :source)
+    destination = Keyword.fetch!(config, :destination)
+
+    Task.async(Phoenix.Copy.Watcher, :start_link, [[source, destination]])
+    |> Task.await(:infinity)
+  end
 end
