@@ -1,6 +1,6 @@
 defmodule Phoenix.Copy do
   @moduledoc """
-  Copies files within a Phoenix project.
+  Copy static assets for your Phoenix app during development and deployment.
 
   This project was created to manage static asset files. Paired with other standalone build tools
   like `esbuild` and `tailwind`, this can reduce your dependence on JavaScript-based build tools

@@ -1,9 +1,14 @@
-# Phoenix.Copy
+# Phoenix Copy
 
 Copy static assets for your Phoenix app during development and deployment.
 
-This project provides a mix task `mix phx.copy [profile]` for one-time copying of files between a configured source and destination.
-It also integrates with Phoenix watchers to provide continuous copying of files in development.
+This project provides:
+
+* A mix task `mix phx.copy` for one-time copying of files during deployment
+* Integration with Phoenix watchers to provide continuous copying of files in development
+* The ability to configure multiple sources and destinations for more complex workflows
+
+It pairs nicely with the Phoenix team's [esbuild](https://github.com/phoenixframework/esbuild) and [tailwind](https://github.com/phoenixframework/tailwind) helpers for a complete asset pipeline.
 
 ## Installation
 
@@ -95,5 +100,5 @@ config :my_app, MyAppWeb.Endpoint,
 ## Acknowledgements
 
 This project uses code adapted from the [esbuild](https://github.com/phoenixframework/esbuild) and [tailwind](https://github.com/phoenixframework/tailwind) helpers for Phoenix.
-Both projects, like this one, are licensed under the [MIT License](LICENSE).
+Those projects, like this one, are licensed under the [MIT License](LICENSE).
 Thank you to the contributors of both projects.

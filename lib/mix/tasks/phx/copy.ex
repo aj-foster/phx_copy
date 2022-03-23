@@ -20,6 +20,6 @@ defmodule Mix.Tasks.Phx.Copy do
   end
 
   def run(_args) do
-    Mix.raise("`mix phx.copy` expects the profile as argument")
+    Mix.raise("`mix phx.copy` expects the profile as its only argument")
   end
 end
