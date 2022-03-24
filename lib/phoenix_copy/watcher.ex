@@ -7,7 +7,7 @@ defmodule Phoenix.Copy.Watcher do
     GenServer.start_link(__MODULE__, args)
   end
 
-  def init([source, destination]) do
+  def init({source, destination}) do
     Logger.info("Starting Phoenix.Copy file watcher...")
     {:ok, watcher_pid} = FileSystem.start_link(dirs: [source])
     FileSystem.subscribe(watcher_pid)
