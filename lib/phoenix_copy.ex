@@ -83,7 +83,6 @@ defmodule Phoenix.Copy do
     source = Keyword.fetch!(config, :source)
     destination = Keyword.fetch!(config, :destination)
 
-    Task.async(Phoenix.Copy.Watcher, :start_link, [{source, destination}])
-    |> Task.await(:infinity)
+    Phoenix.Copy.Watcher.watch(source, destination)
   end
 end
