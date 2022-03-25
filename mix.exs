@@ -4,7 +4,7 @@ defmodule Phoenix.Copy.MixProject do
   def project do
     [
       app: :phoenix_copy,
-      version: "0.1.0-rc.1",
+      version: "0.1.0-rc.2",
       elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -43,7 +43,7 @@ defmodule Phoenix.Copy.MixProject do
 
   defp package do
     [
-      files: ~w(lib .formatter.exs CHANGELOG.md LICENSE mix.exs README.md),
+      files: ~w(lib test .formatter.exs CHANGELOG.md LICENSE mix.exs README.md),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/aj-foster/phx_copy"}
     ]

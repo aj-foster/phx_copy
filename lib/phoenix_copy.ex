@@ -2,24 +2,7 @@ defmodule Phoenix.Copy do
   @moduledoc """
   Copy static assets for your Phoenix app during development and deployment.
 
-  This project was created to manage static asset files. Paired with other standalone build tools
-  like `esbuild` and `tailwind`, this can reduce your dependence on JavaScript-based build tools
-  like Webpack.
-
-  ## Configuration
-
-  Before using the project, you must configure one or more profiles. Each profile defines a source
-  and destination for the copy. In `config/config.exs`, add:
-
-      config :phoenix_copy,
-        default: [
-          source: Path.expand("source/", __DIR__),
-          destination: Path.expand("destination/", __DIR__)
-        ]
-
-  This defines a profile `:default`. You can define as many profiles as you wish. By using
-  `Path.expand/2`, you may define the source and destination as paths relative to the configuration
-  file.
+  For more information, see the [README](readme.html).
 
   ## Direct Usage
 
@@ -71,7 +54,8 @@ defmodule Phoenix.Copy do
   @doc """
   Watch for changes in the configured `source` and copy files to the `destination`.
 
-  Also performs an initial copy of the files immediately.
+  Also performs an initial copy of the files immediately. Note that this function blocks execution
+  until the process receives an exit signal.
   """
   @spec watch(atom) :: term
   def watch(profile \\ :default)
