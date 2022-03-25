@@ -1,5 +1,8 @@
 # Phoenix Copy
 
+[![Hex.pm](https://img.shields.io/hexpm/v/phoenix_copy)](https://hex.pm/packages/phoenix_copy)
+[![Documentation](https://img.shields.io/badge/hex-docs-blue)](https://hexdocs.pm/phoenix_copy)
+
 Copy static assets for your Phoenix app during development and deployment.
 
 This project provides:
