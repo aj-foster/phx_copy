@@ -9,7 +9,7 @@ defmodule Phoenix.Copy.Watcher do
   #
   def watch(source, destination) do
     Logger.info("Starting Phoenix.Copy file watcher...")
-    {:ok, watcher_pid} = FileSystem.start_link(dirs: [source], latency: 0)
+    {:ok, watcher_pid} = FileSystem.start_link(dirs: [source])
     FileSystem.subscribe(watcher_pid)
 
     handle_messages(source, destination, watcher_pid)
