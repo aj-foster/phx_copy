@@ -37,7 +37,9 @@ defmodule Phoenix.CopyTests do
           destination,
           Path.join(destination, "a.txt"),
           Path.join(destination, "b"),
-          Path.join(destination, "b/c.txt")
+          Path.join(destination, "b/c.txt"),
+          Path.join(destination, "e"),
+          Path.join(destination, "e/f.txt")
         ])
 
       assert MapSet.equal?(copied, expected)
@@ -56,7 +58,9 @@ defmodule Phoenix.CopyTests do
           destination,
           Path.join(destination, "a.txt"),
           Path.join(destination, "b"),
-          Path.join(destination, "b/c.txt")
+          Path.join(destination, "b/c.txt"),
+          Path.join(destination, "e"),
+          Path.join(destination, "e/f.txt")
         ])
 
       assert MapSet.equal?(copied, expected)
@@ -78,6 +82,8 @@ defmodule Phoenix.CopyTests do
           Path.join(destination, "a.txt"),
           Path.join(destination, "b"),
           Path.join(destination, "b/c.txt"),
+          Path.join(destination, "e"),
+          Path.join(destination, "e/f.txt"),
           sub_destination,
           Path.join(sub_destination, "c.txt")
         ])

@@ -29,7 +29,7 @@ defmodule Phoenix.Copy.Watcher do
             end)
 
           relative_path = Path.relative_to(path, source)
-          new_path = Path.join(destination, relative_path)
+          new_path = Path.join(destination, relative_path) |> Path.expand()
 
           Path.dirname(new_path)
           |> File.mkdir_p!()

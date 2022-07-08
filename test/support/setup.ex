@@ -9,18 +9,30 @@ defmodule Phoenix.Copy.Setup do
   """
   def create_directories(_context) do
     random = System.unique_integer([:positive])
+
     source = Path.expand("../../tmp/#{random}/source", __DIR__)
-    sub_source = Path.join(source, "b")
     destination = Path.expand("../../tmp/#{random}/destination", __DIR__)
+
+    sub_source = Path.join(source, "b")
     sub_destination = Path.join(destination, "d")
+
+    single_source = Path.join(source, "e/f.txt")
+    single_destination = Path.join(destination, "g/h.txt")
 
     File.mkdir_p!(sub_source)
     File.mkdir_p!(destination)
+    File.mkdir_p!(Path.dirname(single_source))
     File.write!(Path.join(source, "a.txt"), "Test contents.\n")
     File.write!(Path.join(source, "b/c.txt"), "More test contents.\n")
+    File.write!(single_source, "Event more test contents.\n")
 
     Application.put_env(:phoenix_copy, :default, source: source, destination: destination)
     Application.put_env(:phoenix_copy, :sub, source: sub_source, destination: sub_destination)
+
+    Application.put_env(:phoenix_copy, :single,
+      source: single_source,
+      destination: single_destination
+    )
 
     assert_file_exists(Path.join(source, "a.txt"))
     assert_file_exists(Path.join(source, "b/c.txt"))
@@ -29,7 +41,9 @@ defmodule Phoenix.Copy.Setup do
       source: source,
       destination: destination,
       sub_source: sub_source,
-      sub_destination: sub_destination
+      sub_destination: sub_destination,
+      single_source: single_source,
+      single_destination: single_destination
     }
   end
 
@@ -60,12 +74,18 @@ defmodule Phoenix.Copy.Setup do
         source: source,
         destination: destination,
         sub_source: sub_source,
-        sub_destination: sub_destination
+        sub_destination: sub_destination,
+        single_source: single_source,
+        single_destination: single_destination
       }) do
     watcher =
       Task.async(fn ->
         capture_log(fn ->
-          Watcher.watch([{source, destination}, {sub_source, sub_destination}])
+          Watcher.watch([
+            {source, destination},
+            {sub_source, sub_destination},
+            {single_source, single_destination}
+          ])
         end)
       end)
 

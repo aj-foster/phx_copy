@@ -55,5 +55,13 @@ defmodule Phoenix.Copy.WatcherTest do
       File.write!(source_file, "Some content")
       assert_file_contents(destination_file, "Some content")
     end
+
+    test "watcher copies single files", %{
+      single_source: single_source,
+      single_destination: single_destination
+    } do
+      File.write!(single_source, "Some content")
+      assert_file_contents(single_destination, "Some content")
+    end
   end
 end
