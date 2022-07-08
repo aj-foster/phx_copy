@@ -67,6 +67,6 @@ defmodule Phoenix.Copy do
     source = Keyword.fetch!(config, :source)
     destination = Keyword.fetch!(config, :destination)
 
-    Phoenix.Copy.Watcher.watch(source, destination)
+    Phoenix.Copy.Watcher.watch([{source, destination}])
   end
 end

@@ -3,9 +3,11 @@ defmodule Phoenix.Copy.WatcherTest do
   import Phoenix.Copy.Assertions
   import Phoenix.Copy.Setup
 
-  setup [:create_directories, :start_watcher]
+  setup :create_directories
 
   describe "when a file changes" do
+    setup :start_watcher
+
     test "watcher copies the file", %{source: source, destination: destination} do
       source_file = Path.join(source, "a.txt")
       destination_file = Path.join(destination, "a.txt")
@@ -22,6 +24,8 @@ defmodule Phoenix.Copy.WatcherTest do
   end
 
   describe "when a file is removed" do
+    setup :start_watcher
+
     test "watcher does not error", %{source: source, watcher: watcher} do
       Path.join(source, "a.txt")
       |> File.rm!()
@@ -30,6 +34,26 @@ defmodule Phoenix.Copy.WatcherTest do
       |> File.rm!()
 
       assert Task.shutdown(watcher) == nil
+    end
+  end
+
+  describe "with multiple nested watchers" do
+    setup :start_multi_watcher
+
+    test "watcher copies outer files", %{source: source, destination: destination} do
+      source_file = Path.join(source, "a.txt")
+      destination_file = Path.join(destination, "a.txt")
+
+      File.write!(source_file, "New content")
+      assert_file_contents(destination_file, "New content")
+    end
+
+    test "watcher copies nested files", %{sub_source: source, sub_destination: destination} do
+      source_file = Path.join(source, "e.txt")
+      destination_file = Path.join(destination, "e.txt")
+
+      File.write!(source_file, "Some content")
+      assert_file_contents(destination_file, "Some content")
     end
   end
 end

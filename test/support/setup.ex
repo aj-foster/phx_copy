@@ -22,7 +22,12 @@ defmodule Phoenix.Copy.Setup do
     assert_file_exists(Path.join(source, "a.txt"))
     assert_file_exists(Path.join(source, "b/c.txt"))
 
-    %{source: source, destination: destination}
+    %{
+      source: source,
+      destination: destination,
+      sub_source: Path.join(source, "b"),
+      sub_destination: Path.join(destination, "d")
+    }
   end
 
   @doc """
@@ -32,7 +37,7 @@ defmodule Phoenix.Copy.Setup do
     watcher =
       Task.async(fn ->
         capture_log(fn ->
-          Watcher.watch(source, destination)
+          Watcher.watch([{source, destination}])
         end)
       end)
 
@@ -40,7 +45,32 @@ defmodule Phoenix.Copy.Setup do
     # FileSystem races against the modification of files in the test, and macOS makes some
     # interesting choices regarding the reporting of events. I'm sure there is a way to get around
     # this, but it matters very little compared to other things.
-    Process.sleep(1000)
+    Process.sleep(1_000)
+
+    %{watcher: watcher}
+  end
+
+  @doc """
+  Start a watcher process with multiple, nested, previously-configured directories.
+  """
+  def start_multi_watcher(%{
+        source: source,
+        destination: destination,
+        sub_source: sub_source,
+        sub_destination: sub_destination
+      }) do
+    watcher =
+      Task.async(fn ->
+        capture_log(fn ->
+          Watcher.watch([{source, destination}, {sub_source, sub_destination}])
+        end)
+      end)
+
+    # Look... stuff is hard, okay? Don't judge me.
+    # FileSystem races against the modification of files in the test, and macOS makes some
+    # interesting choices regarding the reporting of events. I'm sure there is a way to get around
+    # this, but it matters very little compared to other things.
+    Process.sleep(1_000)
 
     %{watcher: watcher}
   end
