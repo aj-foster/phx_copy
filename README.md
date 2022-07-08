@@ -20,7 +20,7 @@ If you plan to copy assets in production, then add `phoenix_copy` as a dependenc
 ```elixir
 def deps do
   [
-    {:phoenix_copy, "~> 0.1.0"}
+    {:phoenix_copy, "~> 0.1.1"}
   ]
 end
 ```
@@ -30,7 +30,7 @@ On the other hand, if you only need to copy assets in development, you can insta
 ```elixir
 def deps do
   [
-    {:phoenix_copy, "~> 0.1.0", only: :dev}
+    {:phoenix_copy, "~> 0.1.1", only: :dev}
   ]
 end
 ```

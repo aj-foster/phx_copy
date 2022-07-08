@@ -1,5 +1,10 @@
 # Changelog
 
+### v0.1.1 (2022-07-07)
+
+* **Add**: Run multiple profiles at once in `Phoenix.Copy.run/1`, `Phoenix.Copy.watch/1`, and `mix phx.copy`.
+* **Fix**: Support single-file source and destination paths.
+
 ## v0.1.0 (2022-03-24)
 
 * **Fix**: Use default latency of 500ms for watcher on macOS to reduce double-copies
