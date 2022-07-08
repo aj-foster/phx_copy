@@ -61,6 +61,29 @@ defmodule Phoenix.CopyTests do
 
       assert MapSet.equal?(copied, expected)
     end
+
+    test "copies files from multiple profiles", %{
+      destination: destination,
+      sub_destination: sub_destination
+    } do
+      assert File.ls!(destination) == []
+
+      copied =
+        Copy.run([:default, :sub])
+        |> MapSet.new()
+
+      expected =
+        MapSet.new([
+          destination,
+          Path.join(destination, "a.txt"),
+          Path.join(destination, "b"),
+          Path.join(destination, "b/c.txt"),
+          sub_destination,
+          Path.join(sub_destination, "c.txt")
+        ])
+
+      assert MapSet.equal?(copied, expected)
+    end
   end
 
   describe "watch/1" do
@@ -75,6 +98,24 @@ defmodule Phoenix.CopyTests do
         end)
 
       assert_file_exists(Path.join(destination, "a.txt"))
+
+      Task.shutdown(watcher)
+    end
+
+    test "copies files from multiple profiles", %{
+      destination: destination,
+      sub_destination: sub_destination
+    } do
+      assert File.ls!(destination) == []
+
+      watcher =
+        Task.async(fn ->
+          capture_log(fn ->
+            Copy.watch([:default, :sub])
+          end)
+        end)
+
+      assert_file_exists(Path.join(sub_destination, "c.txt"))
 
       Task.shutdown(watcher)
     end

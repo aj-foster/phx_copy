@@ -10,14 +10,17 @@ defmodule Phoenix.Copy.Setup do
   def create_directories(_context) do
     random = System.unique_integer([:positive])
     source = Path.expand("../../tmp/#{random}/source", __DIR__)
+    sub_source = Path.join(source, "b")
     destination = Path.expand("../../tmp/#{random}/destination", __DIR__)
+    sub_destination = Path.join(destination, "d")
 
-    Application.put_env(:phoenix_copy, :default, source: source, destination: destination)
-
-    File.mkdir_p!(Path.join(source, "b"))
+    File.mkdir_p!(sub_source)
     File.mkdir_p!(destination)
     File.write!(Path.join(source, "a.txt"), "Test contents.\n")
     File.write!(Path.join(source, "b/c.txt"), "More test contents.\n")
+
+    Application.put_env(:phoenix_copy, :default, source: source, destination: destination)
+    Application.put_env(:phoenix_copy, :sub, source: sub_source, destination: sub_destination)
 
     assert_file_exists(Path.join(source, "a.txt"))
     assert_file_exists(Path.join(source, "b/c.txt"))
@@ -25,8 +28,8 @@ defmodule Phoenix.Copy.Setup do
     %{
       source: source,
       destination: destination,
-      sub_source: Path.join(source, "b"),
-      sub_destination: Path.join(destination, "d")
+      sub_source: sub_source,
+      sub_destination: sub_destination
     }
   end
 

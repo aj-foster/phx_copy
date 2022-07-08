@@ -69,7 +69,7 @@ config :phoenix_copy,
 
 ## Usage
 
-For **one-time copying** of files — for example, when preparing assets for deployment — use `mix phx.copy [profile]` with the name of the configuration profile.
+For **one-time copying** of files — for example, when preparing assets for deployment — use `mix phx.copy [profile] [profile2] ...` with the name of the configuration profiles.
 This can integrate with a mix alias for ease-of-use (for example, in `mix.exs`):
 
 ```elixir
@@ -99,6 +99,8 @@ config :my_app, MyAppWeb.Endpoint,
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 ```
+
+For continuously copying multiple profiles at once, use `{Phoenix.Copy, :watch, [[:profile1, :profile2, ...]]}`.
 
 ## Acknowledgements
 
