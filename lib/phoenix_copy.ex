@@ -73,16 +73,12 @@ defmodule Phoenix.Copy do
   def watch(profile \\ :default)
 
   def watch(profile) when is_atom(profile) do
-    run(profile)
-    config = config_for!(profile)
-
-    source = Keyword.fetch!(config, :source)
-    destination = Keyword.fetch!(config, :destination)
-
-    Phoenix.Copy.Watcher.watch([{source, destination}])
+    watch([profile])
   end
 
   def watch(profiles) when is_list(profiles) do
+    debounce = Application.get_env(:phoenix_copy, :debounce, 0)
+
     Enum.map(profiles, fn profile ->
       run(profile)
       config = config_for!(profile)
@@ -92,6 +88,6 @@ defmodule Phoenix.Copy do
 
       {source, destination}
     end)
-    |> Phoenix.Copy.Watcher.watch()
+    |> Phoenix.Copy.Watcher.watch(debounce: debounce)
   end
 end

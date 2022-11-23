@@ -20,7 +20,7 @@ If you plan to copy assets in production, then add `phoenix_copy` as a dependenc
 ```elixir
 def deps do
   [
-    {:phoenix_copy, "~> 0.1.1"}
+    {:phoenix_copy, "~> 0.1.2"}
   ]
 end
 ```
@@ -30,7 +30,7 @@ On the other hand, if you only need to copy assets in development, you can insta
 ```elixir
 def deps do
   [
-    {:phoenix_copy, "~> 0.1.1", only: :dev}
+    {:phoenix_copy, "~> 0.1.2", only: :dev}
   ]
 end
 ```
@@ -47,11 +47,15 @@ config :phoenix_copy,
   default: [
     source: Path.expand("../assets/static/", __DIR__),
     destination: Path.expand("../priv/static/", __DIR__)
-  ]
+    ],
+  debounce: 100
 ```
 
 In this example, files will be copied from `../assets/static/` to `../priv/static/`, two directories relative to the location of the configuration file.
 By using `Path.expand(..., __DIR__)`, we can be sure that the paths won't change depending on the working directory of the caller.
+
+`debounce` is optional and is in miliseconds. It will collect events for
+that time and fire once. Default to 0.
 
 If you need multiple copies to take place, you can add additional profiles:
 
