@@ -46,16 +46,16 @@ To get started, let's create a profile called `default` in the app's configurati
 config :phoenix_copy,
   default: [
     source: Path.expand("../assets/static/", __DIR__),
-    destination: Path.expand("../priv/static/", __DIR__)
-    ],
-  debounce: 100
+    destination: Path.expand("../priv/static/", __DIR__),
+    debounce: 100
+  ],
 ```
 
 In this example, files will be copied from `../assets/static/` to `../priv/static/`, two directories relative to the location of the configuration file.
 By using `Path.expand(..., __DIR__)`, we can be sure that the paths won't change depending on the working directory of the caller.
 
-`debounce` is optional and is in miliseconds. It will collect events for
-that time and fire once. Default to 0.
+`debounce` is an optional time in milliseconds to wait before executing the copy.
+Multiple file changes made within the debounce period will result in a single copy event.
 
 If you need multiple copies to take place, you can add additional profiles:
 
@@ -67,7 +67,8 @@ config :phoenix_copy,
   ],
   docs: [
     source: Path.expand("../docs/", __DIR__),
-    destination: Path.expand("../priv/static/docs/", __DIR__)
+    destination: Path.expand("../priv/static/docs/", __DIR__),
+    debounce: 100
   ]
 ```
 

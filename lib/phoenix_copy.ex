@@ -30,8 +30,9 @@ defmodule Phoenix.Copy do
 
           config :phoenix_copy,
             #{profile}: [
-              source: Path.expand("../assets/static", __DIR__),
-              destination: Path.expand("../priv/static", __DIR__)
+              debounce: 100,
+              destination: Path.expand("../priv/static", __DIR__),
+              source: Path.expand("../assets/static", __DIR__)
             ]
       """
   end
@@ -67,6 +68,9 @@ defmodule Phoenix.Copy do
   If multiple profiles are given, the watcher will watch all of the source directories and react
   according to the file's closest watched ancestor. This means that watched directories may overlap,
   with nested sources sending their files to different locations than their ancestors.
+
+  An optional `debounce` time can be configured (in milliseconds) to avoid copying the same file
+  multiple times in a short period. By default, a copy will occur for every filesystem event.
   """
   @spec watch(profile :: atom) :: term
   @spec watch(profiles :: [atom]) :: term
@@ -77,17 +81,16 @@ defmodule Phoenix.Copy do
   end
 
   def watch(profiles) when is_list(profiles) do
-    debounce = Application.get_env(:phoenix_copy, :debounce, 0)
-
     Enum.map(profiles, fn profile ->
       run(profile)
       config = config_for!(profile)
 
       source = Keyword.fetch!(config, :source)
       destination = Keyword.fetch!(config, :destination)
+      debounce = Keyword.get(config, :debounce, 0)
 
-      {source, destination}
+      {source, destination, [debounce: debounce]}
     end)
-    |> Phoenix.Copy.Watcher.watch(debounce: debounce)
+    |> Phoenix.Copy.Watcher.watch()
   end
 end
