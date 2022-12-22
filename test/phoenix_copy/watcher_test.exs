@@ -64,4 +64,34 @@ defmodule Phoenix.Copy.WatcherTest do
       assert_file_contents(single_destination, "Some content")
     end
   end
+
+  describe "with a debounce time configured" do
+    setup do: %{debounce: 1_000}
+    setup :start_watcher
+
+    test "debounces events for the same file", %{source: source, destination: destination} do
+      {:ok, watcher_pid} = FileSystem.start_link(dirs: [destination])
+      FileSystem.subscribe(watcher_pid)
+
+      source_file = Path.join(source, "one.txt")
+      another_file = Path.join(source, "two.txt")
+      destination_file = Path.join(destination, "one.txt") |> Path.absname()
+
+      # In manual testing, macOS batched filesystem events without a manual delay.
+      File.write!(source_file, "New content")
+      Process.sleep(250)
+      File.write!(source_file, "New content plus")
+      Process.sleep(250)
+      File.write!(another_file, "Something else")
+      File.write!(source_file, "New content plus plus")
+      assert_file_contents(destination_file, "New content plus plus", 5_000)
+
+      Process.sleep(1_000)
+      {:messages, messages} = :erlang.process_info(self(), :messages)
+
+      assert Enum.count(messages, fn message ->
+               match?({:file_event, _pid, {^destination_file, _events}}, message)
+             end) == 1
+    end
+  end
 end

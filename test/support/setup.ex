@@ -50,11 +50,13 @@ defmodule Phoenix.Copy.Setup do
   @doc """
   Start a watcher process with previously-configured directories.
   """
-  def start_watcher(%{source: source, destination: destination}) do
+  def start_watcher(%{source: source, destination: destination} = context) do
+    debounce = Map.get(context, :debounce, 0)
+
     watcher =
       Task.async(fn ->
         capture_log(fn ->
-          Watcher.watch([{source, destination}])
+          Watcher.watch([{source, destination, [debounce: debounce]}])
         end)
       end)
 
@@ -82,9 +84,9 @@ defmodule Phoenix.Copy.Setup do
       Task.async(fn ->
         capture_log(fn ->
           Watcher.watch([
-            {source, destination},
-            {sub_source, sub_destination},
-            {single_source, single_destination}
+            {source, destination, [debounce: 0]},
+            {sub_source, sub_destination, [debounce: 0]},
+            {single_source, single_destination, [debounce: 0]}
           ])
         end)
       end)
