@@ -43,7 +43,7 @@ defmodule Phoenix.Copy.MixProject do
 
   defp package do
     [
-      files: ~w(lib test .formatter.exs CHANGELOG.md LICENSE mix.exs README.md),
+      files: ~w(lib .formatter.exs CHANGELOG.md LICENSE mix.exs README.md),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/aj-foster/phx_copy"}
     ]

@@ -1,5 +1,9 @@
 # Changelog
 
+### v0.1.2 (2022-12-21)
+
+* **Add**: Profiles can include a `debounce` option to avoid duplicate copy events (thanks [@kuon](https://github.com/kuon))
+
 ### v0.1.1 (2022-07-07)
 
 * **Add**: Run multiple profiles at once in `Phoenix.Copy.run/1`, `Phoenix.Copy.watch/1`, and `mix phx.copy`.
