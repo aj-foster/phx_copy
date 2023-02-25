@@ -51,7 +51,7 @@ defmodule Phoenix.Copy do
     source = Keyword.fetch!(config, :source)
     destination = Keyword.fetch!(config, :destination)
 
-    File.cp_r!(source, destination)
+    File.cp_r!(source, destination, dereference_symlinks: true)
   end
 
   def run(profiles) when is_list(profiles) do
