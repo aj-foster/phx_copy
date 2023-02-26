@@ -44,7 +44,9 @@ jobs:
             ${{ runner.os }}-mix-${{matrix.pair.otp}}-${{matrix.pair.elixir}}-
 
       - name: Install Dependencies
-        run: mix deps.get --only test
+        run: |
+          sudo apt update && sudo apt install --yes --no-install-recommends inotify-tools
+          mix deps.get --only test
 
       - name: Check Formatting
         run: mix format --check-formatted
