@@ -1,5 +1,6 @@
 defmodule Phoenix.Copy.WatcherTest do
   use ExUnit.Case, async: false
+  import ExUnit.CaptureLog
   import Phoenix.Copy.Assertions
   import Phoenix.Copy.Setup
 
@@ -66,32 +67,37 @@ defmodule Phoenix.Copy.WatcherTest do
   end
 
   describe "with a debounce time configured" do
-    setup do: %{debounce: 1_000}
+    setup do: %{debounce: 2_000}
     setup :start_watcher
 
-    test "debounces events for the same file", %{source: source, destination: destination} do
-      {:ok, watcher_pid} = FileSystem.start_link(dirs: [destination])
-      FileSystem.subscribe(watcher_pid)
+    test "debounces events for the same file", %{
+      source: source,
+      destination: destination,
+      watcher: watcher
+    } do
+      Process.info(watcher.pid, :dictionary)
+      |> elem(1)
+      |> Keyword.get(:watcher_pid)
+      |> FileSystem.subscribe()
 
       source_file = Path.join(source, "one.txt")
       another_file = Path.join(source, "two.txt")
       destination_file = Path.join(destination, "one.txt") |> Path.absname()
 
-      # In manual testing, macOS batched filesystem events without a manual delay.
-      File.write!(source_file, "New content")
-      Process.sleep(250)
-      File.write!(source_file, "New content plus")
-      Process.sleep(250)
-      File.write!(another_file, "Something else")
-      File.write!(source_file, "New content plus plus")
-      assert_file_contents(destination_file, "New content plus plus", 5_000)
+      output =
+        capture_log(fn ->
+          # In manual testing, macOS batched filesystem events without a manual delay.
+          File.write!(source_file, "New content")
+          assert_receive {:file_event, _pid, {^source_file, _events}}, 1_000
+          File.write!(source_file, "New content plus")
+          assert_receive {:file_event, _pid, {^source_file, _events}}, 1_000
+          File.write!(another_file, "Something else")
+          File.write!(source_file, "New content plus plus")
+          assert_file_contents(destination_file, "New content plus plus", 5_000)
+        end)
 
-      Process.sleep(1_000)
-      {:messages, messages} = :erlang.process_info(self(), :messages)
-
-      assert Enum.count(messages, fn message ->
-               match?({:file_event, _pid, {^destination_file, _events}}, message)
-             end) == 1
+      # One occurrence => splits into two.
+      assert String.split(output, "Copy one.txt") |> length() == 2
     end
   end
 end

@@ -23,6 +23,7 @@ defmodule Phoenix.Copy.Watcher do
     sources = Enum.map(definitions, fn {source, _destination, _options} -> source end)
     {:ok, watcher_pid} = FileSystem.start_link(dirs: sources)
     FileSystem.subscribe(watcher_pid)
+    Process.put(:watcher_pid, watcher_pid)
 
     handle_messages(%{definitions: definitions, timers: %{}, watcher_pid: watcher_pid})
   end

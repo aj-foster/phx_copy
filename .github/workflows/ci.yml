@@ -69,5 +69,5 @@ jobs:
           list-suites: failed
           list-tests: failed
           name: Results
-          path: _build/test/lib/phx_copy/*.xml
+          path: _build/test/lib/phoenix_copy/*.xml
           reporter: java-junit
