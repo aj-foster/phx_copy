@@ -34,7 +34,8 @@ defmodule Phoenix.Copy.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.28", only: :dev, runtime: false},
-      {:file_system, "~> 0.2"}
+      {:file_system, "~> 0.2"},
+      {:junit_formatter, "~> 3.0", only: :test}
     ]
   end
 
