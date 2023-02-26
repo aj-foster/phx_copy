@@ -2,6 +2,7 @@
 
 [![Hex.pm](https://img.shields.io/hexpm/v/phoenix_copy)](https://hex.pm/packages/phoenix_copy)
 [![Documentation](https://img.shields.io/badge/hex-docs-blue)](https://hexdocs.pm/phoenix_copy)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 Copy static assets for your Phoenix app during development and deployment.
 
