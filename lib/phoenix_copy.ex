@@ -52,6 +52,7 @@ defmodule Phoenix.Copy do
     destination = Keyword.fetch!(config, :destination)
 
     # TODO: Remove check when support for Elixir < 1.14 is removed.
+    # https://github.com/elixir-lang/elixir/commit/e453a7547f1f87fe451631714508c9888e3724b5
     if Version.match?(System.version(), ">= 1.14.0-rc.0") do
       File.cp_r!(source, destination, dereference_symlinks: true)
     else
