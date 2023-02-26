@@ -35,7 +35,7 @@ defmodule Phoenix.Copy.Watcher do
         unless File.dir?(path) or :removed in events do
           {source, destination, options} =
             Enum.min_by(state.definitions, fn {source, _destination, _options} ->
-              Path.relative_to(path, source)
+              relative_to(path, source)
               |> Path.split()
               |> length()
             end)
@@ -44,7 +44,7 @@ defmodule Phoenix.Copy.Watcher do
             Process.cancel_timer(previous_timer_or_nil)
           end
 
-          relative_path = Path.relative_to(path, source)
+          relative_path = relative_to(path, source)
           new_path = Path.join(destination, relative_path) |> Path.expand()
           debounce = Keyword.fetch!(options, :debounce)
           timer = Process.send_after(self(), {:copy, path, relative_path, new_path}, debounce)
@@ -67,5 +67,14 @@ defmodule Phoenix.Copy.Watcher do
 
         handle_messages(state)
     end
+  end
+
+  # TODO: Remove check when support for Elixir < 1.12 is removed.
+  # https://github.com/elixir-lang/elixir/commit/952c9c175374d9525fd2f34dff0225ceb6be1152
+  if Version.match?(System.version(), ">= 1.12.0-rc.0") do
+    defp relative_to(path, from), do: Path.relative_to(path, from)
+  else
+    defp relative_to(path, path), do: "."
+    defp relative_to(path, from), do: Path.relative_to(path, from)
   end
 end
