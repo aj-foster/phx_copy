@@ -21,7 +21,7 @@ If you plan to copy assets in production, then add `phoenix_copy` as a dependenc
 ```elixir
 def deps do
   [
-    {:phoenix_copy, "~> 0.1.3"}
+    {:phoenix_copy, "~> 0.1.4"}
   ]
 end
 ```
